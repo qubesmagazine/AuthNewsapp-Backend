@@ -19,12 +19,6 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
-  active: {
-    type: Boolean,
-    default: false,
-  },
-  activeToken: String,
-  activeExpires: Date,
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
