@@ -2,6 +2,12 @@ const express = require("express");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
 const userRoute = require('./routes/userRoute');
+const categoryRoute = require('./routes/categoryRoute');
+const newsRoute = require('./routes/newsRoute');
+const formData = require('express-form-data')
+
+
+
 require("dotenv").config();
 require("colors");
 
@@ -13,6 +19,7 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(formData.parse())
 
 // Logging middleware
 if (process.env.NODE_ENV === "development") {
@@ -21,12 +28,14 @@ if (process.env.NODE_ENV === "development") {
 
 // Routes
 app.use('/api/users', userRoute);
+app.use('/api/category', categoryRoute);
+app.use('/api/news', newsRoute);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
-});
+}); 
 
 // Test endpoint
 app.get('/', (req, res) => {
