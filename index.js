@@ -1,12 +1,11 @@
 const express = require("express");
 const morgan = require("morgan");
 const connectDB = require("./config/db");
+const cors = require("cors");  // Import the cors package
 const userRoute = require('./routes/userRoute');
 const categoryRoute = require('./routes/categoryRoute');
 const newsRoute = require('./routes/newsRoute');
-const formData = require('express-form-data')
-
-
+const formData = require('express-form-data');
 
 require("dotenv").config();
 require("colors");
@@ -17,9 +16,10 @@ const app = express();
 connectDB();
 
 // Middleware
+app.use(cors());  // Enable CORS for all routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(formData.parse())
+app.use(formData.parse());
 
 // Logging middleware
 if (process.env.NODE_ENV === "development") {
@@ -34,8 +34,8 @@ app.use('/api/news', newsRoute);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send('Something went wrong!');
-}); 
+  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
 
 // Test endpoint
 app.get('/', (req, res) => {
